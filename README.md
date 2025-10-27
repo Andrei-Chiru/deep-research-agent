@@ -1,4 +1,4 @@
-# Brutus 
+# Brutus 🐻
 - deep research agent that analyses choices in brief Request for Comments style 
 ## Table of contents
 * Overview
