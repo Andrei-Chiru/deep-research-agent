@@ -4,14 +4,12 @@ import java.util.*;
 
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
-import com.openai.models.responses.Response;
-import com.openai.models.responses.ResponseCreateParams;
-import com.openai.models.responses.Response;
-import com.openai.models.responses.ResponseCreateParams;
-import com.openai.models.responses.ResponseOutputItem;
-import com.openai.models.responses.ResponseOutputMessage;
+import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.chat.completions.ChatCompletionMessage;
+
+import static java.util.stream.Collectors.toList;
 
 public class TellAJoke {
     public static void main(String[] args) throws Exception {
@@ -25,19 +23,44 @@ public class TellAJoke {
             }
         }
 
+        // get the key
         String apiKey = map.get("OPENAI_API_KEY");
         if (apiKey == null || apiKey.isBlank()) {
             throw new IllegalStateException("OPENAI_API_KEY missing in .env");
         }
 
+        // connect to the openai client
         OpenAIClient client = OpenAIOkHttpClient.builder().apiKey(apiKey).build();
-        ChatCompletionCreateParams cp = ChatCompletionCreateParams.builder()
-                .addUserMessage("tell me a short programming joke")
-                .model("gpt-4o-mini")
-                .build();
 
-        ChatCompletion cc = client.chat().completions().create(cp);
-        String text = cc.choices().get(0).message().content().orElse(null);
-        System.out.println(text);
+        // give a prompt
+        ChatCompletionCreateParams.Builder createParamsBuilder = ChatCompletionCreateParams.builder()
+                .model(ChatModel.GPT_5)
+                .maxCompletionTokens(2048)
+                .addUserMessage("Tell me a short joke");
+
+        // get response
+        List<ChatCompletionMessage> messages =
+                client.chat().completions().create(createParamsBuilder.build()).choices().stream()
+                        .map(ChatCompletion.Choice::message)
+                        .collect(toList());
+
+        messages.stream().flatMap(message -> message.content().stream()).forEach(System.out::println);
+
+        System.out.println("\n-----------------------------------\n");
+
+        // add message to history
+        messages.forEach(createParamsBuilder::addMessage);
+        createParamsBuilder
+                .addUserMessage("Tell me another one!");
+
+        // get response
+        messages =
+                client.chat().completions().create(createParamsBuilder.build()).choices().stream()
+                        .map(ChatCompletion.Choice::message)
+                        .collect(toList());
+
+        messages.stream().flatMap(message -> message.content().stream()).forEach(System.out::println);
+
+        System.out.println("\n-----------------------------------\n");
     }
 }

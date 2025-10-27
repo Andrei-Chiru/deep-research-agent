@@ -1,16 +1,21 @@
 plugins {
-    application     // lets us run with `gradlew run`
+    application
     java
 }
 
+tasks.named<JavaExec>("run"){
+    standardInput = System.`in`
+}
+
 repositories {
-    mavenCentral()  // where dependencies come from
+    mavenCentral()
 }
 
 dependencies {
-    implementation("com.openai:openai-java:4.6.1")           // OpenAI Java SDK
+    implementation("com.openai:openai-java:4.6.1")
 }
 
 application {
-    mainClass.set("TellAJoke") // your main class (see below)
+    mainClass.set("app.ResearchAgent")
+//    mainClass.set("TellAJoke")
 }
