@@ -1,6 +1,12 @@
 # Brutus 
 - deep research agent that analyses choices in brief Request for Comments style 
 ## Table of contents
+* Overview
+* Features
+* Prerequisites
+* Installation
+* Usage
+* Example queries
 ## Overview
 The deep-research-agent is a Java-based framework designed to automate and structure research workflows in RFC-style.
 It is intended to break down complex questions or problems into sub-tasks, apply agentic reasoning (e.g., planning, iteration, tool invocation) and then synthesise findings into a coherent output.
@@ -23,7 +29,7 @@ cd deep-research-agent
 ```text
 OPENAI_API_KEY=...
 ```
-3) Run the agent
+3) Run the agent (in IDE of choice)
 ```bash
 ./gradlew run
 ```
