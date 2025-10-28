@@ -56,6 +56,7 @@ public class ResearchAgent {
                 llm.resetHistory();
             }
         }while (anotherAnalysis);
+        scanner.close();
     }
 
 }
