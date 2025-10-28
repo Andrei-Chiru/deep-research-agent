@@ -17,7 +17,7 @@ public class StepRunner {
     public StepContext runAll(StepContext context){
         //1) PLAN
         context.plan = llm.complete(PromptFactory.plan(context),2000);
-        String criteria = "Evaluation criteria:";
+        String criteria = "Evaluation criteria:\n";
         context.criteria = List.of(
                 context.plan
                 .substring(context.plan.indexOf(criteria) + criteria.length())
@@ -30,7 +30,7 @@ public class StepRunner {
 
         // 2) GATHER
         context.gathered = llm.complete(PromptFactory.gather(context), 6000);
-        String citations = "Citations:";
+        String citations = "Citations:\n";
         context.sources = List.of(
                 context.gathered
                         .substring(context.gathered.indexOf(citations) + citations.length())
